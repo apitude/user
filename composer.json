@@ -1,0 +1,30 @@
+{
+  "name": "apitude/user",
+  "description": "User security module for Apitude projects",
+  "minimum-stability": "dev",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gordon Forsythe",
+      "email": "baohx2000@gmail.com"
+    }
+  ],
+  "repositories" : [
+    {
+      "type": "vcs",
+      "url": "https://github.com/apitude/apitude"
+    }
+  ],
+  "require": {
+    "symfony/security": "~2"
+  },
+  "require-dev": {
+    "dbtlr/silex-doctrine-migrations": "dev-master",
+    "apitude/apitude": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Apitude\\User\\": "src/"
+    }
+  }
+}
