@@ -4,12 +4,17 @@ namespace Apitude\User;
 
 use Apitude\Core\Provider\AbstractServiceProvider;
 use Apitude\User\ORM\UserStampSubscriber;
+use Apitude\User\Security\UserProvider;
 use Silex\Application;
 use Silex\Provider\SecurityServiceProvider;
 use Silex\ServiceProviderInterface;
 
 class UserServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
 {
+    protected $services = [
+        'user' => UserProvider::class,
+    ];
+
     protected $doctrineEventSubscribers = [
         UserStampSubscriber::class,
     ];
