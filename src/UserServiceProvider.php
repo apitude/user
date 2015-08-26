@@ -33,6 +33,7 @@ class UserServiceProvider extends AbstractServiceProvider implements ServiceProv
      */
     public function register(Application $app)
     {
-        $app->register(new SecurityServiceProvider());
+        $app['security.firewalls'] = [];
+        $app->register(new SecurityServiceProvider);
     }
 }
