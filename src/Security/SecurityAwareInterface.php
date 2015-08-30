@@ -10,10 +10,10 @@ interface SecurityAwareInterface
     /**
      * @return TokenStorageInterface
      */
-    function getTokenStorage();
+    public function getTokenStorage();
 
     /**
      * @return UserInterface|User
      */
-    function getCurrentUser();
+    public function getCurrentUser();
 }

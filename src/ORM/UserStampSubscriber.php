@@ -1,7 +1,6 @@
 <?php
 namespace Apitude\User\ORM;
 
-
 use Apitude\Core\Provider\ContainerAwareInterface;
 use Apitude\Core\Provider\ContainerAwareTrait;
 use Apitude\User\ORM\EntityStubs\UserStampEntityInterface;

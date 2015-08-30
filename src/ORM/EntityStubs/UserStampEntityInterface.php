@@ -1,7 +1,6 @@
 <?php
 namespace Apitude\User\ORM\EntityStubs;
 
-
 use Apitude\User\Entities\User;
 
 interface UserStampEntityInterface

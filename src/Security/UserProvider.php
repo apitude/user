@@ -1,7 +1,6 @@
 <?php
 namespace Apitude\User\Security;
 
-
 use Apitude\Core\Provider\Helper\EntityManagerAwareInterface;
 use Apitude\Core\Provider\Helper\EntityManagerAwareTrait;
 use Apitude\User\Entities\User;

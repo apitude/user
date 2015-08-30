@@ -1,7 +1,6 @@
 <?php
 namespace Apitude\User;
 
-
 use Apitude\Core\Commands\BaseCommand;
 use Apitude\Core\Provider\AbstractServiceProvider;
 use Apitude\User\Entities\User;
@@ -41,10 +40,10 @@ class UserServiceProvider extends AbstractServiceProvider implements ServiceProv
     {
         // setup security for cli commands
         if (php_sapi_name() === 'cli') {
-            $app['console.configure'][] = function(BaseCommand $command) {
+            $app['console.configure'][] = function (BaseCommand $command) {
                 $command->addOption('user', 'U', InputOption::VALUE_REQUIRED, 'User ID to run command as');
             };
-            $app['console.prerun'][] = function(BaseCommand $command, InputInterface $input, OutputInterface $output) {
+            $app['console.prerun'][] = function (BaseCommand $command, InputInterface $input, OutputInterface $output) {
                 if ($input->getOption('user')) {
                     $app = $command->getSilexApplication();
                     /** @var EntityManagerInterface $em */
