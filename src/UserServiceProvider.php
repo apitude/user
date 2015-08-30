@@ -40,17 +40,23 @@ class UserServiceProvider extends AbstractServiceProvider implements ServiceProv
     {
         // setup security for cli commands
         if (php_sapi_name() === 'cli') {
-            $app['console.configure'][] = function (BaseCommand $command) {
-                $command->addOption('user', 'U', InputOption::VALUE_REQUIRED, 'User ID to run command as');
-            };
-            $app['console.prerun'][] = function (BaseCommand $command, InputInterface $input, OutputInterface $output) {
-                if ($input->getOption('user')) {
-                    $app = $command->getSilexApplication();
-                    /** @var EntityManagerInterface $em */
-                    $em = $app['orm.em'];
-                    $app['user'] = $em->find(User::class, $input->getOption('user'));
-                }
-            };
+            $app['console.configure'] = $app->extend('console.configure', function ($callbacks) {
+                $callbacks[] = function (BaseCommand $command) {
+                    $command->addOption('user', 'U', InputOption::VALUE_REQUIRED, 'User ID to run command as');
+                };
+                return $callbacks;
+            });
+            $app['console.prerun'] = $app->extend('console.prerun', function ($callbacks) {
+                $callbacks[] = function (BaseCommand $command, InputInterface $input, OutputInterface $output) {
+                    if ($input->getOption('user')) {
+                        $app = $command->getSilexApplication();
+                        /** @var EntityManagerInterface $em */
+                        $em = $app['orm.em'];
+                        $app['user'] = $em->find(User::class, $input->getOption('user'));
+                    }
+                };
+                return $callbacks;
+            });
         }
 
         $app['security.firewalls'] = [];
