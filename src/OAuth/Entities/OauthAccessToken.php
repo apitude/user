@@ -15,7 +15,7 @@ class OauthAccessToken
     /**
      * @var string
      * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\Column(name="access_token", type="string", length=64)
      */
     private $accessToken;
@@ -28,7 +28,7 @@ class OauthAccessToken
 
     /**
      * @var int
-     * @ORM\Column(type="integer" name="expire_time", options={"unsigned"=true})
+     * @ORM\Column(type="integer", name="expire_time", options={"unsigned"=true})
      */
     private $expireTime;
 

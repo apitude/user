@@ -15,14 +15,14 @@ class OauthRefreshToken
     /**
      * @var string
      * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\Column(name="refresh_token", type="string", length=64)
      */
     private $refreshToken;
 
     /**
      * @var int
-     * @ORM\Column(type="integer" name="expire_time", options={"unsigned"=true})
+     * @ORM\Column(type="integer", name="expire_time", options={"unsigned"=true})
      */
     private $expireTime;
 

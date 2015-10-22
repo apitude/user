@@ -19,7 +19,7 @@ class OAuth2ServiceProvider extends AbstractServiceProvider implements ServicePr
     ];
 
     public function __construct() {
-        $this->entityFolders['Apitest\User\OAuth\Entities'] = realpath(__DIR__.'/Entities');
+        $this->entityFolders['Apitude\User\OAuth\Entities'] = realpath(__DIR__.'/Entities');
     }
 
     public function register(Application $app) {

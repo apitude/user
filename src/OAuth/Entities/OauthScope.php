@@ -14,7 +14,7 @@ class OauthScope
     /**
      * @var string
      * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\Column(name="id", type="string", length=32, options={"CHARACTER SET"="ascii"})
      */
     private $id;

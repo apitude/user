@@ -15,7 +15,7 @@ class OauthAuthCode
     /**
      * @var string
      * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\GeneratedValue(strategy="NONE")
      * @ORM\Column(name="auth_code", type="string", options={"CHARACTER SET"="ascii"})
      */
     private $authCode;

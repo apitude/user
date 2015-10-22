@@ -7,7 +7,7 @@ trait UserStampEntityTrait
 {
     /**
      * @var User
-     * @ORM\OneToOne(targetEntity="Apitude\Core\Entities\User")
+     * @ORM\OneToOne(targetEntity="Apitude\User\Entities\User")
      * @ORM\JoinColumn(name="create_user_id", referencedColumnName="id")
      * @API\Property\Expose()
      */
@@ -15,7 +15,7 @@ trait UserStampEntityTrait
 
     /**
      * @var User
-     * @ORM\OneToOne(targetEntity="Apitude\Core\Entities\User")
+     * @ORM\OneToOne(targetEntity="Apitude\User\Entities\User")
      * @ORM\JoinColumn(name="modify_user_id", referencedColumnName="id")
      * @API\Property\Expose()
      */

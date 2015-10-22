@@ -27,7 +27,7 @@ class UserServiceProvider extends AbstractServiceProvider implements ServiceProv
 
     public function __construct()
     {
-        $this->entityFolders['Apitest\User\Entities'] = realpath(__DIR__.'/Entities');
+        $this->entityFolders['Apitude\User\Entities'] = realpath(__DIR__.'/Entities');
     }
 
     /**
@@ -39,6 +39,7 @@ class UserServiceProvider extends AbstractServiceProvider implements ServiceProv
      */
     public function register(Application $app)
     {
+        parent::register($app);
         // setup security for cli commands
         if (php_sapi_name() === 'cli') {
             $app['console.configure'] = $app->extend('console.configure', function ($callbacks) {
