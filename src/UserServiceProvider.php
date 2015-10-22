@@ -18,6 +18,7 @@ class UserServiceProvider extends AbstractServiceProvider implements ServiceProv
 {
     protected $services = [
         'user' => UserProvider::class,
+        UserStampSubscriber::class,
     ];
 
     protected $doctrineEventSubscribers = [
@@ -26,7 +27,7 @@ class UserServiceProvider extends AbstractServiceProvider implements ServiceProv
 
     public function __construct()
     {
-        $this->services[] = UserStampSubscriber::class;
+        $this->entityFolders['Apitest\User\Entities'] = realpath(__DIR__.'/Entities');
     }
 
     /**

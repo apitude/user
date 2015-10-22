@@ -16,7 +16,8 @@
     }
   ],
   "require": {
-    "symfony/security": "~2"
+    "symfony/security": "~2",
+    "league/oauth2-server": "dev-master"
   },
   "require-dev": {
     "dbtlr/silex-doctrine-migrations": "dev-master",
