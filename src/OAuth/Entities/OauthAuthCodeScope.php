@@ -24,7 +24,7 @@ class OauthAuthCodeScope
     /**
      * @var OauthAuthCode
      * @ORM\ManyToOne(targetEntity="OauthAuthCode")
-     * @ORM\JoinColumn(name="auth_code", referencedColumnName="id")
+     * @ORM\JoinColumn(name="auth_code", referencedColumnName="auth_code")
      */
     private $authCode;
 

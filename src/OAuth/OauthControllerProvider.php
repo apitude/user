@@ -1,6 +1,7 @@
 <?php
 namespace Apitude\User\OAuth;
 
+use Apitude\User\OAuth\Controller\OauthController;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
@@ -17,6 +18,11 @@ class OauthControllerProvider implements ControllerProviderInterface
      */
     public function connect(Application $app)
     {
-        $app->get('/authorize', self::class.'::authorizeGet');
+        /** @var ControllerCollection $controllers */
+        $controllers = $app['controllers_factory'];
+        $controllers->get('/authorize', OauthController::class.'::authorize');
+        $controllers->get('/token', OauthController::class.'::tokenInfo');
+
+        return $controllers;
     }
 }

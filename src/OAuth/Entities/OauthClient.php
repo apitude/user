@@ -14,7 +14,7 @@ class OauthClient
     /**
      * @var string
      * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(name="id", type="string", length=32, options={"CHARACTER SET"="ascii"})
      */
     private $id;

@@ -29,7 +29,7 @@ class OauthRefreshToken
     /**
      * @var OauthAccessToken
      * @ORM\OneToOne(targetEntity="OauthAccessToken")
-     * @ORM\JoinColumn(name="access_token", referencedColumnName="id")
+     * @ORM\JoinColumn(name="access_token", referencedColumnName="access_token")
      */
     private $accessToken;
 

@@ -7,7 +7,7 @@ use Apitude\Core\Annotations\API;
 /**
  * Class OauthAccessToken
  * @ORM\Entity()
- * @ORM\Table(name="oauth_access_token")
+ * @ORM\Table(name="oauth_access_token_scope")
  * @package Apitude\User\Entities
  */
 class OauthAccessTokenScope

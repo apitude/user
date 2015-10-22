@@ -8,7 +8,7 @@ use Apitude\Core\Annotations\API;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="oauth_session")
+ * @ORM\Table(name="oauth_session_scope")
  * @package Apitude\User\Entities
  */
 class OauthSessionScope

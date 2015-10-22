@@ -2,13 +2,19 @@
 namespace Apitude\User\OAuth;
 
 use Apitude\Core\Provider\AbstractServiceProvider;
+use Apitude\User\OAuth\Commands\CreateClient;
 use Apitude\User\OAuth\Storage;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\ResourceServer;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 
 class OAuth2ServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
 {
+    protected $commands = [
+        CreateClient::class,
+    ];
+
     protected $services = [
         Storage\AccessTokenStorage::class,
         Storage\AuthCodeStorage::class,
@@ -34,5 +40,20 @@ class OAuth2ServiceProvider extends AbstractServiceProvider implements ServicePr
                 ->setScopeStorage($app[Storage\ScopeStorage::class])
                 ->setAuthCodeStorage($app[Storage\AuthCodeStorage::class]);
         });
+
+        $app[ResourceServer::class] = $app->share(function() use($app) {
+            return new ResourceServer(
+                $app[Storage\SessionStorage::class],
+                $app[Storage\AccessTokenStorage::class],
+                $app[Storage\ClientStorage::class],
+                $app[Storage\ScopeStorage::class]
+            );
+        });
+    }
+
+    public function boot(Application $app)
+    {
+        parent::boot($app);
+        $app->mount('/oauth', new OauthControllerProvider());
     }
 }
