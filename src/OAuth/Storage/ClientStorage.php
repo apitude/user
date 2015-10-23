@@ -1,12 +1,10 @@
 <?php
 namespace Apitude\User\OAuth\Storage;
 
-
 use Apitude\Core\Provider\ContainerAwareInterface;
 use Apitude\Core\Provider\ContainerAwareTrait;
 use Apitude\Core\Provider\Helper\EntityManagerAwareInterface;
 use Apitude\Core\Provider\Helper\EntityManagerAwareTrait;
-use League\OAuth2\Server\AbstractServer;
 use League\OAuth2\Server\Entity\ClientEntity;
 use League\OAuth2\Server\Entity\SessionEntity;
 use League\OAuth2\Server\Storage\AbstractStorage;

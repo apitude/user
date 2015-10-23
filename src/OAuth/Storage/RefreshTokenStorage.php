@@ -5,7 +5,6 @@ use Apitude\Core\Provider\ContainerAwareInterface;
 use Apitude\Core\Provider\ContainerAwareTrait;
 use Apitude\Core\Provider\Helper\EntityManagerAwareInterface;
 use Apitude\Core\Provider\Helper\EntityManagerAwareTrait;
-use League\OAuth2\Server\AbstractServer;
 use League\OAuth2\Server\Entity\RefreshTokenEntity;
 use League\OAuth2\Server\Storage\AbstractStorage;
 use League\OAuth2\Server\Storage\RefreshTokenInterface;

@@ -1,15 +1,10 @@
 <?php
 namespace Apitude\User\OAuth\Storage;
 
-
-use Apitude\Core\Application;
 use Apitude\Core\Provider\ContainerAwareInterface;
 use Apitude\Core\Provider\ContainerAwareTrait;
 use Apitude\Core\Provider\Helper\EntityManagerAwareInterface;
 use Apitude\Core\Provider\Helper\EntityManagerAwareTrait;
-use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
-use Doctrine\ORM\EntityManagerInterface;
-use League\OAuth2\Server\AbstractServer;
 use League\OAuth2\Server\Entity\AccessTokenEntity;
 use League\OAuth2\Server\Entity\ScopeEntity;
 use League\OAuth2\Server\Storage\AbstractStorage;
