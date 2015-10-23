@@ -1,7 +1,6 @@
 <?php
 namespace Apitude\User\OAuth\Entities;
 
-use Apitude\User\OAuth\Entities\OauthAccessToken;
 use Doctrine\ORM\Mapping as ORM;
 use Apitude\Core\Annotations\API;
 
