@@ -40,7 +40,7 @@ class SessionStorage extends AbstractStorage implements SessionInterface, Contai
     {
         $sql = <<<SQL
 SELECT os.id, os.owner_type, os.owner_id, os.client_id, os.client_redirect_uri
-FROM oauth_session
+FROM oauth_session os
 INNER JOIN oauth_access_token oat ON(oat.session_id = os.id)
 WHERE oat.access_token = :token
 SQL;
@@ -65,7 +65,7 @@ SQL;
     {
         $sql = <<<SQL
 SELECT os.id, os.owner_type, os.owner_id, os.client_id, os.client_redirect_uri
-FROM oauth_session
+FROM oauth_session os
 INNER JOIN oauth_auth_code oac ON(oac.session_id = os.id)
 WHERE oac.auth_code = :authCode
 SQL;

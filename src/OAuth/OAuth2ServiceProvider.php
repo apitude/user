@@ -5,6 +5,7 @@ use Apitude\Core\Provider\AbstractServiceProvider;
 use Apitude\User\OAuth\Authentication\OAuthToken;
 use Apitude\User\OAuth\Authentication\WebPasswordGrant;
 use Apitude\User\OAuth\Commands\CreateClient;
+use Apitude\User\OAuth\Commands\CreateScope;
 use Apitude\User\OAuth\Storage;
 use Apitude\User\Security\UserProvider;
 use League\OAuth2\Server\AuthorizationServer;
@@ -22,6 +23,7 @@ class OAuth2ServiceProvider extends AbstractServiceProvider implements ServicePr
 {
     protected $commands = [
         CreateClient::class,
+        CreateScope::class,
     ];
 
     protected $services = [
@@ -52,32 +54,6 @@ class OAuth2ServiceProvider extends AbstractServiceProvider implements ServicePr
 
             $authCodeGrant = new AuthCodeGrant();
             $server->addGrantType($authCodeGrant);
-
-            $clientCredentials = new ClientCredentialsGrant();
-            $server->addGrantType($clientCredentials);
-
-            $passwordGrant = new WebPasswordGrant();
-            $passwordGrant->setVerifyCredentialsCallback(function ($username, $password) use($app) {
-                /** @var UserProvider $userProvider */
-                $userProvider = $app[UserProvider::class];
-                try {
-                    $user = $userProvider->loadUserByUsername($username);
-                } catch(\Exception $e) {
-                    return false;
-                }
-
-                if (password_verify($password, $user->getPassword())) {
-                    // set security context
-                    /** @var TokenStorage $tokenStorage */
-                    $tokenStorage = $app['security.token_storage'];
-                    $tokenStorage->setToken(new OAuthToken($user, [], '', $user->getRoles()));
-                    $app['user'] = $user;
-                    return $username;
-                }
-                return false;
-            });
-
-            $server->addGrantType($passwordGrant);
 
             $refrehTokenGrant = new RefreshTokenGrant();
             $server->addGrantType($refrehTokenGrant);

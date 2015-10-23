@@ -1,6 +1,8 @@
 <?php
 namespace Apitude\User\Security;
 
+use Apitude\Core\Provider\ContainerAwareInterface;
+use Apitude\Core\Provider\ContainerAwareTrait;
 use Apitude\Core\Provider\Helper\EntityManagerAwareInterface;
 use Apitude\Core\Provider\Helper\EntityManagerAwareTrait;
 use Apitude\User\Entities\User;
@@ -9,8 +11,9 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class UserProvider implements UserProviderInterface, EntityManagerAwareInterface
+class UserProvider implements UserProviderInterface, ContainerAwareInterface, EntityManagerAwareInterface
 {
+    use ContainerAwareTrait;
     use EntityManagerAwareTrait;
 
     /**

@@ -3,6 +3,7 @@ namespace Apitude\User;
 
 use Apitude\Core\Commands\BaseCommand;
 use Apitude\Core\Provider\AbstractServiceProvider;
+use Apitude\User\Commands\CreateUser;
 use Apitude\User\Entities\User;
 use Apitude\User\ORM\UserStampSubscriber;
 use Apitude\User\Security\UserProvider;
@@ -16,8 +17,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UserServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
 {
+    protected $commands = [
+        CreateUser::class,
+    ];
+
     protected $services = [
-        'user' => UserProvider::class,
+        UserProvider::class,
         UserStampSubscriber::class,
     ];
 

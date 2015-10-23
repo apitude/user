@@ -1,0 +1,22 @@
+<html>
+    <body>
+    <?php if (!empty($authParams['scopes'])): ?>
+        <h1><?= $authParams['client']->getName() ?> would like to access:</h1>
+
+        <ul>
+            <?php foreach ($authParams['scopes'] as $scope): ?>
+                <li>
+                    <?= $scope->getId() ?>: <?= $scope->getDescription() ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <form method="post">
+        <input type="text" name="username" placeholder="username"/><br />
+        <input type="password" name="password" placeholder="password"/><br />
+        <input type="submit" value="Approve" name="authorization">
+        <input type="submit" value="Deny" name="authorization">
+    </form>
+    </body>
+</html>

@@ -29,13 +29,16 @@ class AccessTokenStorage extends AbstractStorage implements AccessTokenInterface
      */
     public function get($token)
     {
-        $stmt = $this->getEntityManager()->getConnection()->query('SELECT * FROM oauth_access_token WHERE access_token=:token');
-        $stmt->execute(['token' => $token]);
-        if ($row = $stmt->fetch()) {
+        foreach (
+            $this->getEntityManager()->getConnection()->fetchAll(
+                'SELECT * FROM oauth_access_token WHERE access_token=:token',
+                ['token' => $token]
+            ) as $row
+        ) {
             return (new AccessTokenEntity($this->server))
-                ->setId($row['id'])
+                ->setId($row['access_token'])
                 ->setExpireTime($row['expire_time']);
-        }
+        };
         return null;
     }
 

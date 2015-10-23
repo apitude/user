@@ -83,7 +83,7 @@ class AuthCodeStorage extends AbstractStorage implements AuthCodeInterface, Cont
         $result = $this->getDbConnection()->fetchAll(
             <<<SQL
 SELECT s.id, s.description FROM oauth_auth_code_scope acs
-INNER JOIN oauth_scope s ON(s.id=acs.scope)
+INNER JOIN oauth_scope s ON(s.id=acs.oauth_scope)
 WHERE auth_code = :authCode
 SQL
             , [
@@ -114,7 +114,7 @@ SQL
     {
         $this->getDbConnection()->insert('oauth_auth_code_scope', [
             'auth_code' => $token->getId(),
-            'scope' => $scope->getId()
+            'oauth_scope' => $scope->getId()
         ]);
     }
 
@@ -127,7 +127,7 @@ SQL
      */
     public function delete(AuthCodeEntity $token)
     {
-        $this->getDbConnection()->delete('oauth-auth_code_scope', [
+        $this->getDbConnection()->delete('oauth_auth_code_scope', [
             'auth_code' => $token->getId()
         ]);
 

@@ -15,13 +15,13 @@ class OauthClientRedirectUri
      * @var string
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(name="id", type="integer", length=32, options={"unsigned"=true})
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true})
      */
     private $id;
 
     /**
      * @var string
-     * @ORM\Column(name="client_id", type="string", options={"collation"="ascii_general_ci"})
+     * @ORM\Column(name="client_id", type="string", length=64, options={"collation"="ascii_general_ci"})
      */
     private $clientId;
 

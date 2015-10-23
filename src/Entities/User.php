@@ -9,6 +9,7 @@ use Apitude\User\ORM\EntityStubs\UserStampEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Apitude\Core\Annotations\API;
+use Silex\Application\SecurityTrait;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -107,7 +108,7 @@ class User extends AbstractEntity implements StampEntityInterface, UserStampEnti
      */
     public function setPassword($password)
     {
-        $this->password = $password;
+        $this->password = password_hash($password, PASSWORD_DEFAULT);
 
         return $this;
     }
@@ -128,6 +129,17 @@ class User extends AbstractEntity implements StampEntityInterface, UserStampEnti
     {
         $this->securityGroups = $securityGroups;
 
+        return $this;
+    }
+
+    public function addRole($role) {
+        $this->roles[] = $role;
+        return $this;
+    }
+
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
         return $this;
     }
 

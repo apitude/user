@@ -28,7 +28,7 @@ class OauthAuthCodeScope
 
     /**
      * @var OauthScope
-     * @ORM\OneToOne(targetEntity="OauthScope")
+     * @ORM\ManyToOne(targetEntity="OauthScope")
      * @ORM\JoinColumn(name="oauth_scope", referencedColumnName="id", columnDefinition="VARCHAR(32) DEFAULT NULL COLLATE ascii_general_ci")
      */
     private $scope;

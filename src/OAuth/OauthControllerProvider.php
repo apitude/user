@@ -20,9 +20,11 @@ class OauthControllerProvider implements ControllerProviderInterface
     {
         /** @var ControllerCollection $controllers */
         $controllers = $app['controllers_factory'];
-        $controllers->get('/authorize', OauthController::class.'::authorizeGet');
+        $controllers->get('/', OauthController::class.'::signinRedirect');
+        $controllers->get('/signin', OauthController::class.'::signinGet');
+        $controllers->post('/signin', OauthController::class.'::signinPost');
         $controllers->post('/authorize', OauthController::class.'::authorizePost');
-        $controllers->get('/access_token', OauthController::class.'::accessToken');
+        $controllers->post('/access_token', OauthController::class.'::accessToken');
         $controllers->get('/token', OauthController::class.'::tokenInfo');
 
         return $controllers;

@@ -2,13 +2,17 @@
 namespace Apitude\User\OAuth\Controller;
 
 use Apitude\Core\Application;
+use Apitude\User\Security\UserProvider;
+use Apitude\user\Entities\User;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Exception\AccessDeniedException;
 use League\OAuth2\Server\Exception\OAuthException;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
-use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use League\OAuth2\Server\ResourceServer;
+use League\OAuth2\Server\Util\RedirectUri;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,12 +23,7 @@ class OauthController
      * @return AuthorizationServer
      */
     private function getAuthorizationServer(Application $app) {
-        static $authServer;
-        if (!$authServer) {
-            /** @var AuthorizationServer $server */
-            $authServer = $app[AuthorizationServer::class];
-        }
-        return $authServer;
+        return $app[AuthorizationServer::class];
     }
 
     /**
@@ -35,58 +34,88 @@ class OauthController
         return $app[ResourceServer::class];
     }
 
-    public function authorizeGet() {
-        $inputs = [];
-        foreach ($_GET as $key=>$value) {
-            $inputs[] = <<<HTML
-<input type="hidden" name="{$key}" value="{$value}"/>
-HTML;
-        }
-
-        $inputs = implode('', $inputs);
-        return new Response(
-            <<<HTML
-<html>
-    <body>
-        <form method="post">
-            {$inputs}
-            <label>Username: <input type="text" name="username"/></label>
-            <label>Password: <input type="password" name="password"/></label>
-            <input type="submit" value="Login"/>
-        </form>
-    </body>
-</html>
-HTML
-            ,
-            200,
-            ['Content-Type' => 'text/html']
-        );
-    }
-
-    public function authorizePost(Application $app, Request $request) {
-        $server = $this->getAuthorizationServer($app);
+    public function signinRedirect(Application $app) {
         try {
-            /** @var PasswordGrant $grant */
-            $grant = $server->getGrantType('web_password');
-            $response =  $grant->completeFlow();
-            if ($response) {
-                return new JsonResponse($response);
+            session_start();
+            /** @var AuthCodeGrant $grant */
+            $grant = $this->getAuthorizationServer($app)->getGrantType('authorization_code');
+            $authParams = $grant->checkAuthorizeParams();
+            $authParams['client'] = $authParams['client']->getId();
+            $authParams['scopes'] = array_keys($authParams['scopes']);
+            $_SESSION['auth_params'] = $authParams;
+            return $app->redirect('/oauth/signin');
+        } catch(OAuthException $e) {
+            if ($e->shouldRedirect()) {
+                return new RedirectResponse($e->getRedirectUri());
             }
-        } catch(\Exception $e) {
-            return new JsonResponse([
-                'error' => $e->getCode(),
-                'message' => $e->getMessage()
-            ]);
+            return new JsonResponse(
+                [
+                    'error' => $e->errorType,
+                    'message' => $e->getMessage()
+                ],
+                $e->httpStatusCode,
+                $e->getHttpHeaders()
+            );
         }
-
-        $response = new Response('', 200, [
-            'Location'  =>  $redirectUri
-        ]);
-        return $response;
     }
 
-    public function accessToken(Application $app, Request $request) {
+    public function signinGet(Application $app, Request $request) {
+        session_start();
+        $authParams = $_SESSION['auth_params'];
+        $authParams['client'] = $this->getAuthorizationServer($app)->getClientStorage()->get($authParams['client']);
+        $scopeStorage = $this->getAuthorizationServer($app)->getScopeStorage();
+        $authParams['scopes'] = array_map(function($item) use ($scopeStorage) {
+            return $scopeStorage->get($item);
+        }, $authParams['scopes']);
+        ob_start();
+        include(__DIR__.'/signin.phtml');
+        return new Response(ob_get_clean(), 200, [
+            'Content-Type' => 'text/html'
+        ]);
+    }
+
+    public function signinPost(Application $app, Request $request) {
+        session_start();
+        $authParams = $_SESSION['auth_params'];
+        $authParams['client'] = $this->getAuthorizationServer($app)->getClientStorage()->get($authParams['client']);
+        $scopeStorage = $this->getAuthorizationServer($app)->getScopeStorage();
+        $authParams['scopes'] = array_map(function($item) use ($scopeStorage) {
+            return $scopeStorage->get($item);
+        }, $authParams['scopes']);
+        /** @var UserProvider $userProvider */
+        $userProvider = $app[UserProvider::class];
+        try {
+            /** @var User $user */
+            $user = $userProvider->loadUserByUsername($request->get('username'));
+        } catch(\Exception $e) {
+            return false;
+        }
+
+        if (password_verify($request->get('password'), $user->getPassword())) {
+            if ($_POST['authorization'] === 'Approve') {
+                /** @var AuthCodeGrant $grant */
+                $grant = $this->getAuthorizationServer($app)
+                    ->getGrantType('authorization_code');
+                $redirect = $grant->newAuthorizeRequest('user', $user->getId(), $authParams);
+                return $app->redirect($redirect);
+            }
+        }
+        $error = new AccessDeniedException;
+        $redirect = RedirectUri::make(
+            $authParams['redirect_uri'],
+            [
+                'error' =>  $error->errorType,
+                'message'   =>  $error->getMessage()
+            ]
+        );
+        return $app->redirect($redirect);
+    }
+
+    public function accessToken(Application $app) {
         $server = $this->getAuthorizationServer($app);
+        /** @var AuthCodeGrant $grant */
+        $grant = $server->getGrantType('authorization_code');
+        $grant->setRequireClientSecret(false);
 
         try {
             $response = $server->issueAccessToken();
@@ -105,6 +134,7 @@ HTML
 
     public function tokenInfo(Application $app) {
         $server = $this->getResourceServer($app);
+        $server->isValidRequest();
         $accessToken = $server->getAccessToken();
         $session = $server->getSessionStorage()->getByAccessToken($accessToken);
         $token = [

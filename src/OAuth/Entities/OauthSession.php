@@ -33,7 +33,7 @@ class OauthSession
 
     /**
      * @var string
-     * @ORM\Column(name="client_id", type="string", options={"collation"="ascii_general_ci"})
+     * @ORM\Column(name="client_id", type="string", length=64, options={"collation"="ascii_general_ci"})
      */
     private $clientId;
 
