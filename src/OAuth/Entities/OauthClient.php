@@ -15,13 +15,13 @@ class OauthClient
      * @var string
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="UUID")
-     * @ORM\Column(name="id", type="string", length=32, options={"CHARACTER SET"="ascii"})
+     * @ORM\Column(name="id", type="string", length=32, options={"collation"="ascii_general_ci"})
      */
     private $id;
 
     /**
      * @var string
-     * @ORM\Column(name="secret", type="string", options={"CHARACTER SET"="ascii"})
+     * @ORM\Column(name="secret", type="string", options={"collation"="ascii_general_ci"})
      */
     private $secret;
 

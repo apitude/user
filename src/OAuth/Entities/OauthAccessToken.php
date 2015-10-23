@@ -16,7 +16,7 @@ class OauthAccessToken
      * @var string
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\Column(name="access_token", type="string", length=64)
+     * @ORM\Column(name="access_token", type="string", length=64, options={"collation"="ascii_general_ci"})
      */
     private $accessToken;
 

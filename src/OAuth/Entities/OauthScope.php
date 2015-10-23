@@ -15,13 +15,13 @@ class OauthScope
      * @var string
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\Column(name="id", type="string", length=32, options={"CHARACTER SET"="ascii"})
+     * @ORM\Column(name="id", type="string", length=32, options={"collation"="ascii_general_ci"})
      */
     private $id;
 
     /**
      * @var string
-     * @ORM\Column(name="description", type="string", options={"CHARACTER SET"="ascii"})
+     * @ORM\Column(name="description", type="string", options={"collation"="ascii_general_ci"})
      */
     private $description;
 

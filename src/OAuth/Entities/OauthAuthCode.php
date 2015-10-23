@@ -16,7 +16,7 @@ class OauthAuthCode
      * @var string
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\Column(name="auth_code", type="string", options={"CHARACTER SET"="ascii"})
+     * @ORM\Column(name="auth_code", type="string", length=128, options={"collation"="ascii_general_ci"})
      */
     private $authCode;
 
@@ -29,7 +29,7 @@ class OauthAuthCode
 
     /**
      * @var int
-     * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @ORM\Column(name="expire_time", type="integer", options={"unsigned"=true})
      */
     private $expireTime;
 

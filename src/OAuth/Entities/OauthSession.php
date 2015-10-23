@@ -16,25 +16,25 @@ class OauthSession
      * @var string
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(name="id", type="integer", length=32, options={"unsigned"=true})
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true})
      */
     private $id;
 
     /**
      * @var string
-     * @ORM\Column(name="owner_type", type="string", options={"CHARACTER SET"="ascii"})
+     * @ORM\Column(name="owner_type", type="string", options={"collation"="ascii_general_ci"})
      */
     private $ownerType;
 
     /**
      * @var string
-     * @ORM\Column(name="owner_id", type="string", options={"CHARACTER SET"="ascii"})
+     * @ORM\Column(name="owner_id", type="string", options={"collation"="ascii_general_ci"})
      */
     private $ownerId;
 
     /**
      * @var string
-     * @ORM\Column(name="client_id", type="string", options={"CHARACTER SET"="ascii"})
+     * @ORM\Column(name="client_id", type="string", options={"collation"="ascii_general_ci"})
      */
     private $clientId;
 

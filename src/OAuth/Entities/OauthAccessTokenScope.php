@@ -23,14 +23,14 @@ class OauthAccessTokenScope
     /**
      * @var OauthAccessToken
      * @ORM\ManyToOne(targetEntity="OauthAccessToken")
-     * @ORM\JoinColumn(name="access_token", referencedColumnName="access_token")
+     * @ORM\JoinColumn(name="access_token", referencedColumnName="access_token", columnDefinition="VARCHAR(64) DEFAULT NULL COLLATE ascii_general_ci")
      */
     private $accessToken;
 
     /**
      * @var OauthScope
      * @ORM\ManyToOne(targetEntity="OauthScope")
-     * @ORM\JoinColumn(name="scope", referencedColumnName="id")
+     * @ORM\JoinColumn(name="scope", referencedColumnName="id", columnDefinition="VARCHAR(32) DEFAULT NULL COLLATE ascii_general_ci")
      */
     private $scope;
 

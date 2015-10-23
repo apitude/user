@@ -24,14 +24,14 @@ class OauthAuthCodeScope
     /**
      * @var OauthAuthCode
      * @ORM\ManyToOne(targetEntity="OauthAuthCode")
-     * @ORM\JoinColumn(name="auth_code", referencedColumnName="auth_code")
+     * @ORM\JoinColumn(name="auth_code", referencedColumnName="auth_code", columnDefinition="VARCHAR(128) DEFAULT NULL COLLATE ascii_general_ci")
      */
     private $authCode;
 
     /**
      * @var OauthScope
      * @ORM\OneToOne(targetEntity="OauthScope")
-     * @ORM\JoinColumn(name="oauth_scope", referencedColumnName="id")
+     * @ORM\JoinColumn(name="oauth_scope", referencedColumnName="id", columnDefinition="VARCHAR(32) DEFAULT NULL COLLATE ascii_general_ci")
      */
     private $scope;
 

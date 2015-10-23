@@ -21,13 +21,13 @@ class OauthClientRedirectUri
 
     /**
      * @var string
-     * @ORM\Column(name="client_id", type="string", options={"CHARACTER SET"="ascii"})
+     * @ORM\Column(name="client_id", type="string", options={"collation"="ascii_general_ci"})
      */
     private $clientId;
 
     /**
      * @var string
-     * @ORM\Column(name="redirect_uri", type="string", options={"CHARACTER SET"="ascii"})
+     * @ORM\Column(name="redirect_uri", type="string", options={"collation"="ascii_general_ci"})
      */
     private $redirectUri;
 
