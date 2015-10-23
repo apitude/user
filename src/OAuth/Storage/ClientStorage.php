@@ -47,13 +47,13 @@ class ClientStorage extends AbstractStorage implements ClientInterface, Containe
         $params = ['clientId' => $clientId];
 
         if ($clientSecret) {
-            $where['oc.secret = :secret'];
+            $where[] = 'oc.secret = :secret';
             $params['secret'] = $clientSecret;
         }
 
         if ($redirectUri) {
             $join = 'INNER JOIN oauth_client_redirect_uri ocru ON(ocru.client_id = oc.id)';
-            $where['ocru.redirect_uri = :uri'];
+            $where[] = 'ocru.redirect_uri = :uri';
             $params['uri'] = $redirectUri;
         }
 

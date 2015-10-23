@@ -48,15 +48,14 @@ class AccessTokenStorage extends AbstractStorage implements AccessTokenInterface
      */
     public function getScopes(AccessTokenEntity $token)
     {
-        $stmt = $this->getEntityManager()->getConnection()->query(
+        $response = [];
+        foreach ($this->getEntityManager()->getConnection()->fetchAll(
             'SELECT s.id, s.description
             FROM oauth_access_token_scope ats
             INNER JOIN oauth_scope s ON(ats.scope=s.id)
-            WHERE access_token=:token'
-        );
-        $stmt->execute(['token' => $token->getId()]);
-        $response = [];
-        while ($row = $stmt->fetch()) {
+            WHERE ats.access_token = :accessToken',
+            ['accessToken' => $token->getId()]
+        ) as $row) {
             $response[] = (new ScopeEntity($this->server))->hydrate([
                 'id' => $row['id'],
                 'description' => $row['description']

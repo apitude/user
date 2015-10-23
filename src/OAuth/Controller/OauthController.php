@@ -5,6 +5,7 @@ use Apitude\Core\Application;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthException;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
+use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use League\OAuth2\Server\ResourceServer;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,8 +23,6 @@ class OauthController
         if (!$authServer) {
             /** @var AuthorizationServer $server */
             $authServer = $app[AuthorizationServer::class];
-            $authServer->addGrantType(new AuthCodeGrant())
-                ->addGrantType(new RefreshTokenGrant());
         }
         return $authServer;
     }
@@ -36,10 +35,43 @@ class OauthController
         return $app[ResourceServer::class];
     }
 
-    public function authorize(Application $app, Request $request) {
+    public function authorizeGet() {
+        $inputs = [];
+        foreach ($_GET as $key=>$value) {
+            $inputs[] = <<<HTML
+<input type="hidden" name="{$key}" value="{$value}"/>
+HTML;
+        }
+
+        $inputs = implode('', $inputs);
+        return new Response(
+            <<<HTML
+<html>
+    <body>
+        <form method="post">
+            {$inputs}
+            <label>Username: <input type="text" name="username"/></label>
+            <label>Password: <input type="password" name="password"/></label>
+            <input type="submit" value="Login"/>
+        </form>
+    </body>
+</html>
+HTML
+            ,
+            200,
+            ['Content-Type' => 'text/html']
+        );
+    }
+
+    public function authorizePost(Application $app, Request $request) {
         $server = $this->getAuthorizationServer($app);
         try {
-            $authParams = $server->getGrantType('authorization_code')->checkAuthorizeParams();
+            /** @var PasswordGrant $grant */
+            $grant = $server->getGrantType('web_password');
+            $response =  $grant->completeFlow();
+            if ($response) {
+                return new JsonResponse($response);
+            }
         } catch(\Exception $e) {
             return new JsonResponse([
                 'error' => $e->getCode(),
@@ -47,9 +79,6 @@ class OauthController
             ]);
         }
 
-        // show form?
-
-        $redirectUri = $server->getGrantType('authorization_code')->newAuthorizeRequest('user', 1, $authParams);
         $response = new Response('', 200, [
             'Location'  =>  $redirectUri
         ]);
