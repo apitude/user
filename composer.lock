@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "70b51ef1634f0520bef3dfd55ead6252",
-    "content-hash": "e24d2f9b8442866c9c21604e6fa112c9",
+    "hash": "93eeb2e20659192886be60fc4cf31a2a",
+    "content-hash": "43abf23e0dfd7bc9d1faeb7f926ff067",
     "packages": [
         {
             "name": "league/event",
@@ -59,16 +59,16 @@
         },
         {
             "name": "league/oauth2-server",
-            "version": "dev-master",
+            "version": "4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth2-server.git",
-                "reference": "03815cec6d7a6e0f333e1dcdb699d46db7ce59f2"
+                "reference": "34a6b66b8ca4255f8334c5aaf5cb34d7c57cdde8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/oauth2-server/zipball/03815cec6d7a6e0f333e1dcdb699d46db7ce59f2",
-                "reference": "03815cec6d7a6e0f333e1dcdb699d46db7ce59f2",
+                "url": "https://api.github.com/repos/thephpleague/oauth2-server/zipball/34a6b66b8ca4255f8334c5aaf5cb34d7c57cdde8",
+                "reference": "34a6b66b8ca4255f8334c5aaf5cb34d7c57cdde8",
                 "shasum": ""
             },
             "require": {
@@ -119,7 +119,7 @@
                 "secure",
                 "server"
             ],
-            "time": "2015-10-13 10:21:52"
+            "time": "2015-03-22 23:19:36"
         },
         {
             "name": "paragonie/random_compat",
@@ -1889,7 +1889,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "league/oauth2-server": 20,
         "dbtlr/silex-doctrine-migrations": 20,
         "apitude/apitude": 20
     },
