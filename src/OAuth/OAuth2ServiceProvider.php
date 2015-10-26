@@ -3,6 +3,7 @@ namespace Apitude\User\OAuth;
 
 use Apitude\Core\Provider\AbstractServiceProvider;
 use Apitude\User\OAuth\Authentication\OAuth2Listener;
+use Apitude\User\OAuth\Authentication\OAuth2OptionalListener;
 use Apitude\User\OAuth\Authentication\OAuth2Provider;
 use Apitude\User\OAuth\Commands\CreateClient;
 use Apitude\User\OAuth\Commands\CreateScope;
