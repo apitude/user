@@ -2,11 +2,13 @@
 namespace Apitude\User\OAuth;
 
 use Apitude\Core\Provider\AbstractServiceProvider;
+use Apitude\User\OAuth\Authentication\OAuth2Authenticator;
 use Apitude\User\OAuth\Authentication\OAuth2Listener;
 use Apitude\User\OAuth\Authentication\OAuth2OptionalListener;
 use Apitude\User\OAuth\Authentication\OAuth2Provider;
 use Apitude\User\OAuth\Commands\CreateClient;
 use Apitude\User\OAuth\Commands\CreateScope;
+use Apitude\User\OAuth\Controller\OauthController;
 use Apitude\User\OAuth\Storage;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
@@ -23,14 +25,18 @@ class OAuth2ServiceProvider extends AbstractServiceProvider implements ServicePr
     ];
 
     protected $services = [
-        Storage\AccessTokenStorage::class,
-        Storage\AuthCodeStorage::class,
-        Storage\ClientStorage::class,
-        Storage\RefreshTokenStorage::class,
-        Storage\ScopeStorage::class,
-        Storage\SessionStorage::class,
+        'oauth.accesstoken-storage' => Storage\AccessTokenStorage::class,
+        'oauth.authcode-storage' => Storage\AuthCodeStorage::class,
+        'oauth.client-storage' => Storage\ClientStorage::class,
+        'oauth.refreshtoken-storage' => Storage\RefreshTokenStorage::class,
+        'oauth.scope-storage' => Storage\ScopeStorage::class,
+        'oauth.session-storage' => Storage\SessionStorage::class,
         OAuth2Provider::class,
         OAuth2Listener::class,
+        OAuth2OptionalListener::class,
+
+        'oauth.authenticator' => OAuth2Authenticator::class,
+        'oauth.controller' => OauthController::class,
     ];
 
     public function __construct() {
@@ -43,12 +49,12 @@ class OAuth2ServiceProvider extends AbstractServiceProvider implements ServicePr
         $app[AuthorizationServer::class] = $app->share(function() use($app) {
             /** @var AuthorizationServer $server */
             $server = (new AuthorizationServer())
-                ->setAccessTokenStorage($app[Storage\AccessTokenStorage::class])
-                ->setSessionStorage($app[Storage\SessionStorage::class])
-                ->setRefreshTokenStorage($app[Storage\RefreshTokenStorage::class])
-                ->setClientStorage($app[Storage\ClientStorage::class])
-                ->setScopeStorage($app[Storage\ScopeStorage::class])
-                ->setAuthCodeStorage($app[Storage\AuthCodeStorage::class]);
+                ->setAccessTokenStorage($app['oauth.accesstoken-storage'])
+                ->setSessionStorage($app['oauth.session-storage'])
+                ->setRefreshTokenStorage($app['oauth.refreshtoken-storage'])
+                ->setClientStorage($app['oauth.client-storage'])
+                ->setScopeStorage($app['oauth.scope-storage'])
+                ->setAuthCodeStorage($app['oauth.authcode-storage']);
 
             $authCodeGrant = new AuthCodeGrant();
             $server->addGrantType($authCodeGrant);
@@ -61,10 +67,10 @@ class OAuth2ServiceProvider extends AbstractServiceProvider implements ServicePr
 
         $app[ResourceServer::class] = $app->share(function() use($app) {
             return new ResourceServer(
-                $app[Storage\SessionStorage::class],
-                $app[Storage\AccessTokenStorage::class],
-                $app[Storage\ClientStorage::class],
-                $app[Storage\ScopeStorage::class]
+                $app['oauth.session-storage'],
+                $app['oauth.accesstoken-storage'],
+                $app['oauth.client-storage'],
+                $app['oauth.scope-storage']
             );
         });
 

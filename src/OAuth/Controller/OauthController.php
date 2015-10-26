@@ -2,13 +2,11 @@
 namespace Apitude\User\OAuth\Controller;
 
 use Apitude\Core\Application;
-use Apitude\User\Security\UserProvider;
-use Apitude\user\Entities\User;
+use Apitude\User\OAuth\Authentication\OAuth2AuthenticatorInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\AccessDeniedException;
 use League\OAuth2\Server\Exception\OAuthException;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
-use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\ResourceServer;
 use League\OAuth2\Server\Util\RedirectUri;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,6 +30,14 @@ class OauthController
      */
     private function getResourceServer(Application $app) {
         return $app[ResourceServer::class];
+    }
+
+    /**
+     * @param Application $app
+     * @return OAuth2AuthenticatorInterface
+     */
+    private function getAuthenticator(Application $app) {
+        return $app['oauth.authenticator'];
     }
 
     public function signinRedirect(Application $app) {
@@ -82,24 +88,19 @@ class OauthController
         $authParams['scopes'] = array_map(function($item) use ($scopeStorage) {
             return $scopeStorage->get($item);
         }, $authParams['scopes']);
-        /** @var UserProvider $userProvider */
-        $userProvider = $app[UserProvider::class];
-        try {
-            /** @var User $user */
-            $user = $userProvider->loadUserByUsername($request->get('username'));
-        } catch(\Exception $e) {
+
+        if (! ($user = $this->getAuthenticator($app)->findUser($request->request->all()))) {
             return false;
         }
 
-        if (password_verify($request->get('password'), $user->getPassword())) {
-            if ($_POST['authorization'] === 'Approve') {
-                /** @var AuthCodeGrant $grant */
-                $grant = $this->getAuthorizationServer($app)
-                    ->getGrantType('authorization_code');
-                $redirect = $grant->newAuthorizeRequest('user', $user->getId(), $authParams);
-                return $app->redirect($redirect);
-            }
+        if ($this->getAuthenticator($app)->authenticate($user, $request->request->all())) {
+            /** @var AuthCodeGrant $grant */
+            $grant = $this->getAuthorizationServer($app)
+                ->getGrantType('authorization_code');
+            $redirect = $grant->newAuthorizeRequest('user', $user->getId(), $authParams);
+            return $app->redirect($redirect);
         }
+
         $error = new AccessDeniedException;
         $redirect = RedirectUri::make(
             $authParams['redirect_uri'],
