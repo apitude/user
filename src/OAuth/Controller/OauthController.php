@@ -114,9 +114,6 @@ class OauthController
 
     public function accessToken(Application $app) {
         $server = $this->getAuthorizationServer($app);
-        /** @var AuthCodeGrant $grant */
-        $grant = $server->getGrantType('authorization_code');
-        $grant->setRequireClientSecret(false);
 
         try {
             $response = $server->issueAccessToken();
