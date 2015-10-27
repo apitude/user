@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Silex\Application;
 use Silex\Provider\SecurityServiceProvider;
 use Silex\ServiceProviderInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -48,14 +49,16 @@ class UserServiceProvider extends AbstractServiceProvider implements ServiceProv
         // setup security for cli commands
         if (php_sapi_name() === 'cli') {
             $app['console.configure'] = $app->extend('console.configure', function ($callbacks) {
-                $callbacks[] = function (BaseCommand $command) {
-                    $command->addOption('user', 'U', InputOption::VALUE_REQUIRED, 'User ID to run command as');
+                $callbacks[] = function (Command $command) {
+                    if ($command instanceof BaseCommand) {
+                        $command->addOption('user', 'U', InputOption::VALUE_REQUIRED, 'User ID to run command as');
+                    }
                 };
                 return $callbacks;
             });
             $app['console.prerun'] = $app->extend('console.prerun', function ($callbacks) {
-                $callbacks[] = function (BaseCommand $command, InputInterface $input, OutputInterface $output) {
-                    if ($input->getOption('user')) {
+                $callbacks[] = function (Command $command, InputInterface $input, OutputInterface $output) {
+                    if ($command instanceof BaseCommand && $input->getOption('user')) {
                         $app = $command->getSilexApplication();
                         /** @var EntityManagerInterface $em */
                         $em = $app['orm.em'];
