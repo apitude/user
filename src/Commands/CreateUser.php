@@ -5,6 +5,7 @@ namespace Apitude\User\Commands;
 use Apitude\Core\Application;
 use Apitude\Core\Commands\BaseCommand;
 use Apitude\User\Entities\User;
+use Apitude\User\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,12 +13,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateUser extends BaseCommand
 {
-    public function __construct()
+    public function configure()
     {
-        parent::__construct('user:create');
+        $this->setName('user:create');
         $this->addArgument('username', InputArgument::REQUIRED)
+            ->addArgument('email', InputArgument::REQUIRED)
             ->addArgument('password', InputArgument::REQUIRED)
             ->addArgument('roles', InputArgument::IS_ARRAY|InputArgument::REQUIRED);
+        parent::configure();
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -25,18 +28,15 @@ class CreateUser extends BaseCommand
         /** @var Application $app */
         $app = $this->getSilexApplication();
 
-        /** @var EntityManagerInterface $em */
-        $em = $app['orm.em'];
+        /** @var UserService $userService */
+        $userService = $app[UserService::class];
 
-        $user = (new User())
-            ->setUsername($input->getArgument('username'))
-            ->setPassword($input->getArgument('password'))
-            ->setRoles($input->getArgument('roles'));
-
-        $em->persist($user);
-        $em->flush();
+        $user = $userService->create(
+            $input->getArgument('username'),
+            $input->getArgument('email'),
+            $input->getArgument('password')
+        );
 
         $output->writeln('Created user with id: '.$user->getId());
     }
-
 }

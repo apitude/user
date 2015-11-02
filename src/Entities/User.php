@@ -9,8 +9,6 @@ use Apitude\User\ORM\EntityStubs\UserStampEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Apitude\Core\Annotations\API;
-use Silex\Application\SecurityTrait;
-use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -56,12 +54,24 @@ class User extends AbstractEntity implements StampEntityInterface, UserStampEnti
     private $password;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", length=128, nullable=false)
+     */
+    private $email;
+
+    /**
      * @var ArrayCollection
      * @ORM\ManyToMany(targetEntity="SecurityGroup", inversedBy="users")
      * @ORM\JoinTable(name="users_securitygroups")
      * @API\Property\Expose()
      */
     private $securityGroups;
+
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean")
+     */
+    private $enabled = true;
 
     /**
      * @var array
@@ -157,11 +167,47 @@ class User extends AbstractEntity implements StampEntityInterface, UserStampEnti
      * and populated in any number of different ways when the user object
      * is created.
      *
-     * @return Role[] The user roles
+     * @return string[] The user roles
      */
     public function getRoles()
     {
         return $this->roles;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param boolean $enabled
+     * @return User
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     * @return User
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+        return $this;
     }
 
     /**

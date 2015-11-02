@@ -22,7 +22,7 @@ class UserProvider implements UserProviderInterface, ContainerAwareInterface, En
      * This method must throw UsernameNotFoundException if the user is not
      * found.
      *
-     * @param string $username The username
+     * @param string $username The username (must be unique across the entire system)
      *
      * @return UserInterface
      *
@@ -32,7 +32,7 @@ class UserProvider implements UserProviderInterface, ContainerAwareInterface, En
      */
     public function loadUserByUsername($username)
     {
-        $user = $this->getEntityManager()->getRepository(User::class)
+        $user = $this->getEntityManager()->getRepository($this->container['user.entity'])
             ->findOneBy(['username' => $username]);
 
         if (!$user) {
@@ -59,7 +59,7 @@ class UserProvider implements UserProviderInterface, ContainerAwareInterface, En
     public function refreshUser(UserInterface $user)
     {
         $this->getEntityManager()->detach($user);
-        return $this->getEntityManager()->getRepository(User::class)
+        return $this->getEntityManager()->getRepository($this->container['user.entity'])
             ->findOneBy(['username' => $user->getUsername()]);
     }
 

@@ -7,7 +7,7 @@ use Apitude\Core\Annotations\API;
 /**
  * @ORM\Entity()
  * @ORM\Table(name="oauth_client")
- * @package Apitude\User\Entities
+ * @API\Entity\Expose
  */
 class OauthClient
 {
@@ -16,6 +16,7 @@ class OauthClient
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(name="id", type="string", length=64, options={"collation"="ascii_general_ci"})
+     * @API\Property\Expose
      */
     private $id;
 

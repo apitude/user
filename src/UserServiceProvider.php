@@ -24,6 +24,7 @@ class UserServiceProvider extends AbstractServiceProvider implements ServiceProv
 
     protected $services = [
         UserProvider::class,
+        UserService::class,
         UserStampSubscriber::class,
     ];
 
@@ -46,6 +47,14 @@ class UserServiceProvider extends AbstractServiceProvider implements ServiceProv
     public function register(Application $app)
     {
         parent::register($app);
+
+        // override this in config to allow a different user entity class to be used.
+        if (isset($app['config']['user.entity'])) {
+            $app['user.entity'] = $app['config']['user.entity'];
+        } else {
+            $app['user.entity'] = User::class;
+        }
+
         // setup security for cli commands
         if (php_sapi_name() === 'cli') {
             $app['console.configure'] = $app->extend('console.configure', function ($callbacks) {
@@ -62,7 +71,7 @@ class UserServiceProvider extends AbstractServiceProvider implements ServiceProv
                         $app = $command->getSilexApplication();
                         /** @var EntityManagerInterface $em */
                         $em = $app['orm.em'];
-                        $app['user'] = $em->find(User::class, $input->getOption('user'));
+                        $app['user'] = $em->find($app['user.entity'], $input->getOption('user'));
                     }
                 };
                 return $callbacks;
