@@ -3,6 +3,7 @@ namespace Apitude\User\OAuth;
 
 use Apitude\Core\Provider\AbstractServiceProvider;
 use Apitude\User\OAuth\Authentication\OAuth2Authenticator;
+use Apitude\User\OAuth\Authentication\OAuth2AuthenticatorInterface;
 use Apitude\User\OAuth\Authentication\OAuth2Listener;
 use Apitude\User\OAuth\Authentication\OAuth2OptionalListener;
 use Apitude\User\OAuth\Authentication\OAuth2Provider;
@@ -12,10 +13,12 @@ use Apitude\User\OAuth\Controller\OauthController;
 use Apitude\User\OAuth\Storage;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
+use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use League\OAuth2\Server\ResourceServer;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 class OAuth2ServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
 {
@@ -56,8 +59,25 @@ class OAuth2ServiceProvider extends AbstractServiceProvider implements ServicePr
                 ->setScopeStorage($app['oauth.scope-storage'])
                 ->setAuthCodeStorage($app['oauth.authcode-storage']);
 
+            // standard auth code grant
             $authCodeGrant = new AuthCodeGrant();
             $server->addGrantType($authCodeGrant);
+
+            // password grant used by our apps
+            $passwordGrant = new PasswordGrant();
+            $passwordGrant->setVerifyCredentialsCallback(function($username, $password) use ($app) {
+                /** @var OAuth2AuthenticatorInterface $auth */
+                $auth = $app['oauth.authenticator'];
+                $user = $auth->findUser(['username' => $username]);
+                if ($user) {
+                    return $auth->authenticate($user, [
+                        'username' => $username,
+                        'password' => $password
+                    ]);
+                }
+                return false;
+            });
+            $server->addGrantType($passwordGrant);
 
             $refrehTokenGrant = new RefreshTokenGrant();
             $server->addGrantType($refrehTokenGrant);

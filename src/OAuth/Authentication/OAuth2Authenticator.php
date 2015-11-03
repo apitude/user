@@ -29,12 +29,16 @@ class OAuth2Authenticator implements OAuth2AuthenticatorInterface, ContainerAwar
     }
 
     /**
+     * Returns user id or false if unable to authenticate
      * @param User $user
      * @param array $params
-     * @return bool
+     * @return mixed
      */
     public function authenticate(User $user, array $params = [])
     {
-        return (password_verify($params['password'], $user->getPassword()) && $params['authorization'] === 'Approve');
+        if (password_verify($params['password'], $user->getPassword())) {
+            return $user->getId();
+        }
+        return false;
     }
 }

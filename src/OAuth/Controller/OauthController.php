@@ -7,6 +7,7 @@ use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\AccessDeniedException;
 use League\OAuth2\Server\Exception\OAuthException;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
+use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\ResourceServer;
 use League\OAuth2\Server\Util\RedirectUri;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -93,7 +94,12 @@ class OauthController
             return false;
         }
 
-        if ($this->getAuthenticator($app)->authenticate($user, $request->request->all())) {
+        $data = $request->request->all();
+
+        if (
+            $data['authenticate'] === 'Accept' &&
+            $this->getAuthenticator($app)->authenticate($user, $request->request->all())
+        ) {
             /** @var AuthCodeGrant $grant */
             $grant = $this->getAuthorizationServer($app)
                 ->getGrantType('authorization_code');
@@ -110,6 +116,31 @@ class OauthController
             ]
         );
         return $app->redirect($redirect);
+    }
+
+    /**
+     * For password grant type
+     * @param Application $app
+     * @return JsonResponse
+     * @throws \League\OAuth2\Server\Exception\InvalidGrantException
+     */
+    public function authorize(Application $app) {
+        $server = $this->getAuthorizationServer($app);
+        /** @var PasswordGrant $grant */
+        $grant = $server->getGrantType('password');
+        try {
+            $result = $grant->completeFlow();
+            return new JsonResponse($result);
+        } catch (OAuthException $e) {
+            return new JsonResponse(
+                [
+                    'error'     =>  $e->errorType,
+                    'message'   =>  $e->getMessage(),
+                ],
+                $e->httpStatusCode ?: 500,
+                $e->getHttpHeaders()
+            );
+        }
     }
 
     public function accessToken(Application $app) {
