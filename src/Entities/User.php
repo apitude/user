@@ -60,6 +60,9 @@ class User extends AbstractEntity implements StampEntityInterface, UserStampEnti
     private $email;
 
     /**
+     * Note that this property is not unique, meaning the same email could be used for multiple users.
+     * This would be useful for systems with multiple types of users or multi-site/domain systems, each with their
+     * own sets of users.  For that strategy, the username should include the subsite to keep the username unique.
      * @var ArrayCollection
      * @ORM\ManyToMany(targetEntity="SecurityGroup", inversedBy="users")
      * @ORM\JoinTable(name="users_securitygroups")

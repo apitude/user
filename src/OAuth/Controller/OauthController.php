@@ -47,6 +47,7 @@ class OauthController
             /** @var AuthCodeGrant $grant */
             $grant = $this->getAuthorizationServer($app)->getGrantType('authorization_code');
             $authParams = $grant->checkAuthorizeParams();
+            /** @noinspection PhpUndefinedMethodInspection */
             $authParams['client'] = $authParams['client']->getId();
             $authParams['scopes'] = array_keys($authParams['scopes']);
             $_SESSION['auth_params'] = $authParams;
@@ -66,7 +67,7 @@ class OauthController
         }
     }
 
-    public function signinGet(Application $app, Request $request) {
+    public function signinGet(Application $app) {
         session_start();
         $authParams = $_SESSION['auth_params'];
         $authParams['client'] = $this->getAuthorizationServer($app)->getClientStorage()->get($authParams['client']);
@@ -75,7 +76,10 @@ class OauthController
             return $scopeStorage->get($item);
         }, $authParams['scopes']);
         ob_start();
-        include(__DIR__.'/signin.phtml');
+        $template = isset($app['config']['user']['signin-template']) ?
+            $app['config']['user']['signin-template'] :
+            __DIR__.'/signin.phtml';
+        include($template);
         return new Response(ob_get_clean(), 200, [
             'Content-Type' => 'text/html'
         ]);
