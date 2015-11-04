@@ -101,8 +101,9 @@ class OauthController
         $data = $request->request->all();
 
         if (
-            $data['authenticate'] === 'Accept' &&
-            $this->getAuthenticator($app)->authenticate($user, $request->request->all())
+            array_key_exists('authorization', $data) &&
+            $data['authorization'] === 'Approve' &&
+            $this->getAuthenticator($app)->authenticate($user, $data)
         ) {
             /** @var AuthCodeGrant $grant */
             $grant = $this->getAuthorizationServer($app)
