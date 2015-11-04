@@ -79,6 +79,7 @@ class UserServiceProvider extends AbstractServiceProvider implements ServiceProv
         }
 
         $app['security.firewalls'] = [];
+        $app['security.access_rules'] = [];
         $app->register(new SecurityServiceProvider);
     }
 }

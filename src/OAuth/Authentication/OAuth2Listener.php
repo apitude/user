@@ -12,6 +12,7 @@ use League\OAuth2\Server\Exception\OAuthException;
 use League\OAuth2\Server\ResourceServer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -77,7 +78,7 @@ class OAuth2Listener implements ContainerAwareInterface, EntityManagerAwareInter
      */
     protected function getInvalidTokenReponse()
     {
-        return $this->getUnauthorizedResponse(401, 'invalid_token');
+        return $this->getUnauthorizedResponse(Response::HTTP_UNAUTHORIZED, 'invalid_token');
     }
 
     /**
@@ -87,7 +88,7 @@ class OAuth2Listener implements ContainerAwareInterface, EntityManagerAwareInter
      */
     protected function getInvalidRequestResponse()
     {
-        return $this->getUnauthorizedResponse(400, 'invalid_request');
+        return $this->getUnauthorizedResponse(Response::HTTP_UNAUTHORIZED, 'invalid_request');
     }
 
     /**
