@@ -18,7 +18,6 @@ use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use League\OAuth2\Server\ResourceServer;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 class OAuth2ServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
 {

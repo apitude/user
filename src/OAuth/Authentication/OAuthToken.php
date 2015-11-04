@@ -59,6 +59,7 @@ class OAuthToken extends AbstractToken
      */
     public function serialize()
     {
+        /** @noinspection PhpUndefinedMethodInspection */
         return serialize(array($this->client_id, $this->getUser()->getUsername(), parent::serialize()));
     }
 

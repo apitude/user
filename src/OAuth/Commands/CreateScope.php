@@ -2,13 +2,10 @@
 namespace Apitude\User\OAuth\Commands;
 
 use Apitude\Core\Commands\BaseCommand;
-use Apitude\User\OAuth\Entities\OauthClient;
-use Apitude\User\OAuth\Entities\OauthClientRedirectUri;
 use Apitude\User\OAuth\Entities\OauthScope;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateScope extends BaseCommand
