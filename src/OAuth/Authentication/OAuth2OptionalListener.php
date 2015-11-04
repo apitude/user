@@ -46,6 +46,8 @@ class OAuth2OptionalListener implements ContainerAwareInterface, EntityManagerAw
             !$request->headers->has('Authorization') ||
             !preg_match('/Bearer (.*)/', $request->headers->get('Authorization'))
         ) {
+            $token = new AnonymousToken('', 'anonymous');
+            $this->getTokenStorage()->setToken($token);
             return;
         }
 

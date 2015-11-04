@@ -113,15 +113,15 @@ class OAuth2ServiceProvider extends AbstractServiceProvider implements ServicePr
         $app['security.authentication_listener.factory.oauth-optional'] = $app->protect(
             function ($name) use ($app) {
                 $app['security.authentication_provider.'.$name.'.oauth-optional'] = $app->share(function ($app) {
-                    return new OAuth2Provider(
-                        $app['user.mapper'],
-                        $app['user-role-pivot.mapper'],
-                        $app['oauth_server']
-                    );
+                    $provider = new OAuth2Provider();
+                    $provider->setContainer($app);
+                    return $provider;
                 });
 
                 $app['security.authentication_listener.'.$name.'.oauth-optional'] = $app->share(function ($app) {
-                    return new OAuth2OptionalListener($app['security'], $app['security.authentication_manager']);
+                    $provider = new OAuth2OptionalListener();
+                    $provider->setContainer($app);
+                    return $provider;
                 });
 
                 return [
