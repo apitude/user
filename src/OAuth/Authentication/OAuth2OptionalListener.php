@@ -57,6 +57,10 @@ class OAuth2OptionalListener implements ContainerAwareInterface, EntityManagerAw
             $server->isValidRequest();
             $token = $server->getAccessToken();
             $user = $this->getEntityManager()->find(User::class, $token->getSession()->getOwnerId());
+            if (!$user->isEnabled()) {
+                $event->setResponse($this->getInvalidTokenReponse());
+                return;
+            }
             $authToken = new OAuthToken(
                 $user,
                 $token->getScopes(),

@@ -36,7 +36,7 @@ class OAuth2Authenticator implements OAuth2AuthenticatorInterface, ContainerAwar
      */
     public function authenticate(User $user, array $params = [])
     {
-        if (password_verify($params['password'], $user->getPassword())) {
+        if ($user->isEnabled() && password_verify($params['password'], $user->getPassword())) {
             return $user->getId();
         }
         return false;
