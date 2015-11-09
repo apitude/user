@@ -7,6 +7,7 @@ use Apitude\Core\Provider\ContainerAwareInterface;
 use Apitude\Core\Provider\ContainerAwareTrait;
 use Apitude\Core\Provider\Helper\EntityManagerAwareInterface;
 use Apitude\Core\Provider\Helper\EntityManagerAwareTrait;
+use Apitude\User\Entities\PasswordResetToken;
 use Apitude\User\Exception\TokenNotFoundException;
 use Apitude\User\UserService;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,9 +32,10 @@ abstract class PasswordController implements ContainerAwareInterface, EntityMana
 
     /**
      * Sends email to the user
+     * @param PasswordResetToken $token
      * @return mixed
      */
-    abstract protected function sendEmail();
+    abstract protected function sendEmail(PasswordResetToken $token);
 
     /**
      * @return UserService
@@ -45,7 +47,8 @@ abstract class PasswordController implements ContainerAwareInterface, EntityMana
 
     public function requestPasswordReset(Request $request) {
         try {
-            $this->getUserService()->requestPasswordResetTokenByUsername($this->getUsername($request));
+            $token = $this->getUserService()->requestPasswordResetTokenByUsername($this->getUsername($request));
+            $this->sendEmail($token);
         } catch(\Exception $e) {
             // swallow exception (most likely a user-not-found)
         }
