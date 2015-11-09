@@ -66,7 +66,7 @@ abstract class PasswordController implements ContainerAwareInterface, EntityMana
 
         $errors = $this->getValidator()->validate($data, $constraints);
 
-        if ($errors) {
+        if ($errors->count()) {
             return new JsonResponse($this->getValidationErrorsArray($errors), Response::HTTP_NOT_ACCEPTABLE);
         }
 
