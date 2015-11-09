@@ -51,7 +51,26 @@ class UserService implements ContainerAwareInterface, EntityManagerAwareInterfac
         return $user;
     }
 
-    public function requestPasswordResetToken($username)
+    public function requestPasswordResetTokenByUser(User $user)
+    {
+        $this->cleanResetTokens = true;
+
+        if ($user && $user->isEnabled()) {
+            $expires = isset($this->container['user.password_reset_token_expire']) ?
+                new \DateTime($this->container['user.password_reset_token_expire']) :
+                new \DateTime('+24 hours');
+            $token = (new PasswordResetToken())
+                ->setExpires($expires)
+                ->setUser($user);
+            $this->getEntityManager()->persist($token);
+            $this->getEntityManager()->flush();
+            return $token;
+        } else {
+            throw new \Exception(self::ERROR_USER_DISABLED);
+        }
+    }
+
+    public function requestPasswordResetTokenByUsername($username)
     {
         $this->cleanResetTokens = true;
 

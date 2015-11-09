@@ -45,7 +45,7 @@ abstract class PasswordController implements ContainerAwareInterface, EntityMana
 
     public function requestPasswordReset(Request $request) {
         try {
-            $this->getUserService()->requestPasswordResetToken($this->getUsername($request));
+            $this->getUserService()->requestPasswordResetTokenByUsername($this->getUsername($request));
         } catch(\Exception $e) {
             // swallow exception (most likely a user-not-found)
         }
