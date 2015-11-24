@@ -78,8 +78,10 @@ class OAuth2ServiceProvider extends AbstractServiceProvider implements ServicePr
             });
             $server->addGrantType($passwordGrant);
 
-            $refrehTokenGrant = new RefreshTokenGrant();
-            $server->addGrantType($refrehTokenGrant);
+            $refreshTokenGrant = new RefreshTokenGrant();
+            $refreshTokenGrant->setRequireClientSecret(false);
+
+            $server->addGrantType($refreshTokenGrant);
 
             return $server;
         });
