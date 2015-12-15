@@ -25,8 +25,6 @@ trait SecurityAwareTrait
      */
     function getCurrentUser()
     {
-        $storage = $this->getTokenStorage();
-        $token = $storage->getToken();
-        return $token->getUser();
+        return $this->container['user'];
     }
 }
