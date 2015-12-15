@@ -7,6 +7,7 @@ use Apitude\Core\Provider\ContainerAwareInterface;
 use Apitude\Core\Provider\ContainerAwareTrait;
 use Apitude\Core\Provider\Helper\EntityManagerAwareInterface;
 use Apitude\Core\Provider\Helper\EntityManagerAwareTrait;
+use Apitude\Core\Validator\Constraints\NotBlankOrWhitespace;
 use Apitude\User\Entities\PasswordResetToken;
 use Apitude\User\Exception\TokenNotFoundException;
 use Apitude\User\UserService;
@@ -59,7 +60,9 @@ abstract class PasswordController implements ContainerAwareInterface, EntityMana
     public function setPassword(Request $request) {
         $constraints = [
             'token' => new Assert\Required(),
-            'password' => new Assert\Required()
+            'password' => new Assert\Required([
+                new NotBlankOrWhitespace(),
+            ])
         ];
 
         $data = $this->getJsonContents($request);
@@ -67,7 +70,7 @@ abstract class PasswordController implements ContainerAwareInterface, EntityMana
         $errors = $this->getValidator()->validate($data, $constraints);
 
         if ($errors->count()) {
-            return new JsonResponse($this->getValidationErrorsArray($errors), Response::HTTP_NOT_ACCEPTABLE);
+            return new JsonResponse($this->getViolationRecursiveArray($errors), Response::HTTP_NOT_ACCEPTABLE);
         }
 
         try {
