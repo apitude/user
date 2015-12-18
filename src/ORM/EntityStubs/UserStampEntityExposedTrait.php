@@ -2,13 +2,16 @@
 namespace Apitude\User\ORM\EntityStubs;
 
 use Apitude\User\Entities\User;
+use Doctrine\ORM\Mapping as ORM;
+use Apitude\Core\Annotations\API;
 
-trait UserStampEntityTrait
+trait UserStampEntityExposedTrait
 {
     /**
      * @var User
      * @ORM\OneToOne(targetEntity="Apitude\User\Entities\User")
      * @ORM\JoinColumn(name="create_user_id", referencedColumnName="id")
+     * @API\Property\Expose
      */
     private $createdBy;
 
@@ -16,6 +19,7 @@ trait UserStampEntityTrait
      * @var User
      * @ORM\OneToOne(targetEntity="Apitude\User\Entities\User")
      * @ORM\JoinColumn(name="modify_user_id", referencedColumnName="id")
+     * @API\Property\Expose
      */
     private $modifiedBy;
 
