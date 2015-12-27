@@ -22,6 +22,7 @@
   "require-dev": {
     "dbtlr/silex-doctrine-migrations": "dev-master",
     "apitude/apitude": "dev-master",
+    "symfony/validator": "~2",
     "squizlabs/php_codesniffer": "^2.3"
   },
   "autoload": {
