@@ -36,9 +36,10 @@ class AuthCodeStorage extends AbstractStorage implements AuthCodeInterface, Cont
     {
         foreach ($this->getDbConnection()->fetchAll(
             'SELECT * from oauth_auth_code
-            WHERE auth_code = :authCode AND expire_time > '.time(),
+            WHERE auth_code = :authCode AND expire_time > :ts',
             [
-                'authCode' => $code
+                'authCode' => $code,
+                'ts' => time()
             ]
         ) as $row) {
             if ($row) {
