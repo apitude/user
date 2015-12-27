@@ -4,9 +4,7 @@ namespace Apitude\User\Commands;
 
 use Apitude\Core\Application;
 use Apitude\Core\Commands\BaseCommand;
-use Apitude\User\Entities\User;
 use Apitude\User\UserService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
