@@ -82,4 +82,9 @@ class OAuthToken extends AbstractToken
     {
         return null;
     }
+
+    public function getScopes()
+    {
+        return $this->scopes;
+    }
 }
