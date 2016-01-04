@@ -15,7 +15,7 @@ class OauthClient
      * @var string
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="UUID")
-     * @ORM\Column(name="id", type="guid", options={"collation"="ascii_general_ci"})
+     * @ORM\Column(name="id", type="guid")
      * @API\Property\Expose
      */
     private $id;

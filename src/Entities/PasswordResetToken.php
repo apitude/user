@@ -20,7 +20,7 @@ class PasswordResetToken extends AbstractEntity implements StampEntityInterface
      * @var string
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
-     * @ORM\Column(type="guid", options={"collation"="ascii_general_ci"})
+     * @ORM\Column(type="guid")
      */
     private $token;
 
