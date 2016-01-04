@@ -7,14 +7,14 @@ trait UserStampEntityTrait
 {
     /**
      * @var User
-     * @ORM\OneToOne(targetEntity="Apitude\User\Entities\User")
+     * @ORM\ManyToOne(targetEntity="Apitude\User\Entities\User")
      * @ORM\JoinColumn(name="create_user_id", referencedColumnName="id")
      */
     private $createdBy;
 
     /**
      * @var User
-     * @ORM\OneToOne(targetEntity="Apitude\User\Entities\User")
+     * @ORM\ManyToOne(targetEntity="Apitude\User\Entities\User")
      * @ORM\JoinColumn(name="modify_user_id", referencedColumnName="id")
      */
     private $modifiedBy;
