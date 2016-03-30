@@ -92,6 +92,14 @@ class UserService implements ContainerAwareInterface, EntityManagerAwareInterfac
         }
     }
 
+    /**
+     * Set password and return updated User Entity
+     *
+     * @param $token
+     * @param $password
+     * @return User
+     * @throws TokenNotFoundException
+     */
     public function resetPassword($token, $password)
     {
         $this->cleanResetTokens = true;
@@ -109,6 +117,8 @@ class UserService implements ContainerAwareInterface, EntityManagerAwareInterfac
         $em = $this->getEntityManager();
         $em->remove($token);
         $em->flush();
+
+        return $user;
     }
 
     public function shutdown()
